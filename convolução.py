@@ -1,48 +1,53 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-# 1. Tempo
-t = np.linspace(0, 2*np.pi, 200)
+sx = 0  # source 
+sy = 0
+d_rec = 12.5 # metros
+offset_min = 0 # metros
+offset_max = 400 # metros
 
-# 2. Sinais
-f = np.sin(t)      # seno
-g = np.cos(t)      # cosseno
+rx_esq = np.arange(-offset_max, -offset_min + d_rec, d_rec)
+rx_dir = np.arange(offset_min, offset_max + d_rec, d_rec)
 
-# 3. Tamanho da convolução
-N = len(f) + len(g) - 1
+rx = np.concatenate((rx_esq,rx_dir))
 
-# 4. FFT
-F = np.fft.fft(f, N)
-G = np.fft.fft(g, N)
+ry = np.full(len(rx), sy)
 
-# 5. Multiplicação (domínio da frequência)
-H = F * G
+plt.figure(figsize= (12,4))
 
-# 6. Transformada inversa
-h = np.fft.ifft(H)
-h = np.real(h)
+plt.scatter(rx, ry, label = 'Receptores')
+plt.scatter(sx, sy, marker= '*', s = 200, label = 'Fonte')
 
-# 7. Comparação com convolução direta
-h_direto = np.convolve(f, g, mode='full')
+plt.xlabel('Distância')
+plt.ylabel('Y')
+plt.grid(True)
+plt.legend()
 
-# 8. Gráficos
-plt.figure(figsize=(10,7))
 
-plt.subplot(4,1,1)
-plt.plot(t, f)
-plt.title("Sinal 1: seno")
+offset = np.abs(rx - sx)
 
-plt.subplot(4,1,2)
-plt.plot(t, g)
-plt.title("Sinal 2: cosseno")
+v1 = 1500 
+v2 = 3000
+z = 1000
 
-plt.subplot(4,1,3)
-plt.plot(h)
-plt.title("Convolução via FFT")
+x = np.arange(150, 8000, 12.5) # offsets
 
-plt.subplot(4,1,4)
-plt.plot(h_direto, '--')
-plt.title("Convolução direta")
+t_refl = np.sqrt(offset**2 + 4*z**2)/v1
 
-plt.tight_layout()
+
+theta = np.degrees(np.arcsin(v1/v2))
+t_refr = (offset/v2) + (2*z*np.cos(theta))/v1
+
+t_dir = offset / v1
+plt.figure(figsize=(12, 7))
+plt.plot(rx, t_dir, label="Onda direta")
+plt.plot(rx, t_refl, label="Onda refletida")
+plt.plot(rx, t_refr, label="Onda refratada")
+plt.xlabel("Offset (m)")
+plt.ylabel("Tempo (s)")
+
+plt.grid(True)
+plt.legend()
+
 plt.show()
