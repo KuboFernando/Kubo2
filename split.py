@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-sx = 1000
+sx = 4000
 sy = 0
 
 offset_min = 150
