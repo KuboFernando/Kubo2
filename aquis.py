@@ -21,7 +21,7 @@ rx_dir = np.arange(offset_min, offset_max + d_rec, d_rec)
 rx = np.concatenate((rx_esq, rx_dir))
 ry = np.full(len(rx), sy)
 
-# Gráfico da geometria
+# Plot da geometria
 plt.figure(figsize=(12, 4))
 
 plt.scatter(rx, ry, s=5, label="Receptores")
@@ -52,7 +52,7 @@ theta = np.arcsin(v1 / v2)
 
 t_refr = offset/v2 + (2*z*np.cos(theta))/v1
 
-# Gráfico dos tempos
+# Plot dos tempos
 plt.figure(figsize=(12, 7))
 
 plt.plot(x, t_dir, label="Onda direta")
